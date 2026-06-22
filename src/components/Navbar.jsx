@@ -1,113 +1,72 @@
-import { useEffect, useState } from 'react';
-import { Menu, X, Download } from 'lucide-react';
-import { navLinks, profile } from '../data';
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { Menu, X } from 'lucide-react';
 
-export default function Navbar() {
-  const [active, setActive] = useState('home');
-  const [open, setOpen] = useState(false);
+const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    const sections = ['home', ...navLinks.map((n) => n.id)];
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) setActive(entry.target.id);
-        });
-      },
-      { rootMargin: '-45% 0px -45% 0px', threshold: 0 }
-    );
-    sections.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    });
-
-    const onScroll = () => setScrolled(window.scrollY > 12);
-    window.addEventListener('scroll', onScroll);
-    return () => {
-      observer.disconnect();
-      window.removeEventListener('scroll', onScroll);
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
     };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const go = (id) => {
-    setOpen(false);
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-  };
+  const navLinks = ['Rooms & Suites', 'Dining', 'Spa & Wellness', 'Experiences'];
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? 'bg-ink/90 backdrop-blur-md border-b border-line-soft' : 'bg-transparent'
-      }`}
+    <motion.nav 
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
+      className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'glass-panel py-3' : 'bg-transparent py-5'}`}
     >
-      <div className="max-w-7xl mx-auto px-6 md:px-10 h-20 flex items-center justify-between">
-        {/* Logo */}
-        <button onClick={() => go('home')} className="flex items-center gap-2 group" aria-label="Go to home">
-          <span className="font-display text-2xl tracking-tight text-paper">
-            J<span className="text-gold">J</span>
+      <div className="max-w-7xl mx-auto px-6 md:px-12 flex justify-between items-center">
+        <div className="flex items-center gap-2">
+          <span className={`text-2xl font-display font-semibold tracking-wider ${scrolled ? 'text-ink' : 'text-white'}`}>
+            NAMA THANN
           </span>
-          <span className="w-1.5 h-1.5 rounded-full bg-gold group-hover:scale-125 transition-transform" />
-        </button>
-
-        {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-10">
-          {navLinks.map((link) => (
-            <button
-              key={link.id}
-              onClick={() => go(link.id)}
-              className={`font-head text-[13px] tracking-[0.18em] uppercase pb-1 border-b transition-colors cursor-pointer ${
-                active === link.id
-                  ? 'text-paper border-gold'
-                  : 'text-dim border-transparent hover:text-paper'
-              }`}
-            >
-              {link.label}
-            </button>
-          ))}
-        </nav>
-
-        <div className="hidden md:block">
-          <a
-            href={profile.resume}
-            download
-            className="inline-flex items-center gap-2 font-head text-[13px] tracking-[0.12em] uppercase border border-line rounded-full px-5 py-2.5 text-paper hover:border-gold hover:text-gold transition-colors"
-          >
-            <Download size={14} />
-            Resume
-          </a>
         </div>
 
-        {/* Mobile toggle */}
-        <button className="md:hidden text-paper" onClick={() => setOpen(!open)} aria-label="Toggle menu">
-          {open ? <X size={24} /> : <Menu size={24} />}
+        {/* Desktop Nav */}
+        <div className="hidden md:flex items-center gap-8">
+          {navLinks.map((link) => (
+            <a key={link} href="#" className={`text-sm tracking-wide transition-colors ${scrolled ? 'text-ink hover:text-gold' : 'text-white/90 hover:text-white'}`}>
+              {link}
+            </a>
+          ))}
+          <button className="bg-gold text-white px-6 py-2 rounded-sm text-sm tracking-wider font-medium hover:bg-gold-light hover:text-ink transition-colors">
+            BOOK NOW
+          </button>
+        </div>
+
+        {/* Mobile Toggle */}
+        <button className="md:hidden text-ink" onClick={() => setIsOpen(!isOpen)}>
+          {isOpen ? <X className={scrolled ? 'text-ink' : 'text-white'} /> : <Menu className={scrolled ? 'text-ink' : 'text-white'} />}
         </button>
       </div>
 
-      {/* Mobile menu */}
-      {open && (
-        <div className="md:hidden bg-ink border-t border-line-soft px-6 py-6 flex flex-col gap-5">
+      {/* Mobile Menu */}
+      {isOpen && (
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="absolute top-full left-0 w-full glass-panel flex flex-col items-center py-6 gap-4 md:hidden"
+        >
           {navLinks.map((link) => (
-            <button
-              key={link.id}
-              onClick={() => go(link.id)}
-              className={`text-left font-head text-sm tracking-[0.18em] uppercase ${
-                active === link.id ? 'text-gold' : 'text-dim'
-              }`}
-            >
-              {link.label}
-            </button>
+            <a key={link} href="#" className="text-ink text-lg font-display">
+              {link}
+            </a>
           ))}
-          <a
-            href={profile.resume}
-            download
-            className="inline-flex items-center gap-2 font-head text-sm tracking-[0.12em] uppercase border border-line rounded-full px-5 py-2.5 text-paper w-fit"
-          >
-            <Download size={14} />
-            Resume
-          </a>
-        </div>
+          <button className="bg-gold text-white px-8 py-3 rounded-sm tracking-widest font-medium mt-4">
+            BOOK NOW
+          </button>
+        </motion.div>
       )}
-    </header>
+    </motion.nav>
   );
-}
+};
+
+export default Navbar;
