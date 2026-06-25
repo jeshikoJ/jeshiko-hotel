@@ -1,56 +1,55 @@
 @import "tailwindcss";
 
 @theme {
-  --color-sand: #FDFBF7;
-  --color-sand-dark: #E8E2DA;
-  --color-ink: #1C1C1C;
-  --color-ink-light: #2A2A2A;
-  --color-gold: #D4AF37;
-  --color-gold-light: #F3E5AB;
-
-  --font-display: 'Playfair Display', serif;
-  --font-body: 'Inter', sans-serif;
+  --font-podium: "FSP DEMO - PODIUM Sharp 4.11", sans-serif;
+  --font-inter: "Inter", sans-serif;
 }
 
-html {
-  scroll-behavior: smooth;
-}
+@layer utilities {
+  .font-podium {
+    font-family: var(--font-podium);
+  }
+  .font-inter {
+    font-family: var(--font-inter);
+  }
 
-body {
-  background-color: var(--color-sand);
-  color: var(--color-ink);
-  font-family: var(--font-body);
-  overflow-x: hidden;
-}
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes scale-in {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+  }
 
-::selection {
-  background: var(--color-gold);
-  color: #fff;
-}
-
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: var(--color-sand); }
-::-webkit-scrollbar-thumb { background: var(--color-gold); border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: var(--color-ink); }
-
-/* Liquid Glass Utilities */
-.glass-panel {
-  background: rgba(255, 255, 255, 0.4);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
-}
-
-.glass-panel-dark {
-  background: rgba(28, 28, 28, 0.6);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-}
-
-/* Headings */
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-display);
+  .animate-fade-up {
+    animation: fade-up 0.8s ease-out forwards;
+  }
+  .animate-fade-up-delay-1 {
+    opacity: 0;
+    animation: fade-up 0.8s ease-out 0.2s forwards;
+  }
+  .animate-fade-up-delay-2 {
+    opacity: 0;
+    animation: fade-up 0.8s ease-out 0.4s forwards;
+  }
+  .animate-fade-up-delay-3 {
+    opacity: 0;
+    animation: fade-up 0.8s ease-out 0.6s forwards;
+  }
+  .animate-fade-up-delay-4 {
+    opacity: 0;
+    animation: fade-up 0.8s ease-out 0.8s forwards;
+  }
+  .animate-fade-in {
+    animation: fade-in 0.8s ease-out forwards;
+  }
+  .animate-fade-in-delay {
+    opacity: 0;
+    animation: fade-in 0.8s ease-out 0.2s forwards;
+  }
 }
